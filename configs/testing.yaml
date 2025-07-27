@@ -1,0 +1,187 @@
+# Testing Configuration for Project Athena
+# Optimized for automated testing, CI/CD, and quality assurance
+
+# Text modality configuration
+text:
+  enabled: true
+  model_name: "mock-llama-model"  # Mock model for testing
+  threshold: 0.5  # Low threshold for testing edge cases
+  batch_size: 2   # Small batch for fast tests
+  max_input_size: 512
+  preprocessing:
+    normalize_unicode: true
+    remove_control_chars: true
+    preserve_formatting: false
+    max_length: 1000
+  postprocessing:
+    include_explanations: true
+    include_confidence_scores: true
+    include_debug_info: true
+
+# Image modality configuration
+image:
+  enabled: true
+  model_name: "mock-clip-model"
+  threshold: 0.5
+  batch_size: 1
+  max_input_size: 224
+  preprocessing:
+    target_size: [224, 224]
+    normalize: true
+    convert_mode: "RGB"
+  postprocessing:
+    include_bounding_boxes: true
+    include_debug_info: true
+
+# Audio modality configuration
+audio:
+  enabled: true
+  model_name: "mock-wav2vec-model"
+  threshold: 0.5
+  batch_size: 1
+  max_input_size: 16000
+  preprocessing:
+    target_sr: 16000
+    normalize_volume: true
+    remove_silence: false  # Keep for testing
+    max_duration: 30
+  postprocessing:
+    include_timestamps: true
+    include_debug_info: true
+
+# Video modality configuration
+video:
+  enabled: true
+  model_name: "mock-videomae-model"
+  threshold: 0.5
+  batch_size: 1
+  max_input_size: 4
+  preprocessing:
+    target_fps: 1.0
+    max_frames: 5
+    extract_audio: true
+  postprocessing:
+    include_frame_analysis: true
+    include_debug_info: true
+
+# Meta AI integration settings (mocked)
+meta_integration:
+  llama_models: ["mock-llama-7b"]
+  api_endpoint: "http://localhost:8888/mock/api/v1"
+  api_key: "test-api-key"
+  rate_limit: 1000000  # No limit for testing
+  timeout: 5  # Short timeout for fast tests
+  retry_attempts: 1
+  use_pytorch_integration: false  # Use mocks
+  enable_fair_research_mode: false
+
+# Ethics thresholds (permissive for testing)
+ethics_thresholds:
+  harmful_content: 0.5
+  bias_detection: 0.5
+  privacy_violation: 0.5
+  misinformation: 0.5
+  toxicity: 0.5
+  hate_speech: 0.5
+  violence: 0.5
+  sexual_content: 0.5
+  child_safety: 0.9  # Keep somewhat strict
+  copyright_infringement: 0.5
+
+# RLHF configuration (disabled for testing)
+rlhf:
+  enabled: false
+  model_path: "mock-rlhf-model"
+  learning_rate: 1e-3
+  batch_size: 1
+  num_epochs: 1
+  max_length: 128
+  temperature: 1.0
+  top_p: 0.9
+  use_wandb: false
+  checkpoint_interval: 10
+
+# Constitutional AI configuration (simplified)
+constitutional_ai:
+  enabled: true
+  constitution_path: "configs/constitution_test.yaml"
+  principles: ["helpfulness", "harmlessness"]
+  reasoning_model: "mock-reasoning-model"
+  max_reasoning_steps: 2
+  confidence_threshold: 0.5
+
+# General settings
+logging_level: "DEBUG"
+cache_enabled: false  # Disabled for deterministic tests
+cache_ttl: 60
+monitoring_enabled: false
+metrics_port: 8081
+api_port: 8001
+
+# Testing-specific settings
+test_settings:
+  mock_external_apis: true
+  deterministic_mode: true
+  fast_mode: true
+  skip_slow_tests: false
+  test_data_path: "tests/data"
+  fixture_path: "tests/fixtures"
+  output_path: "tests/output"
+  coverage_threshold: 85
+  parallel_execution: true
+  max_test_duration: 300  # 5 minutes per test
+  
+# Mock database settings
+database:
+  type: "sqlite"
+  path: ":memory:"
+  connection_pool_size: 1
+  
+# Mock Redis settings
+redis:
+  type: "fake"
+  host: "localhost"
+  port: 6379
+
+# Security settings (simplified for testing)
+security:
+  encryption_enabled: false
+  audit_logging: true
+  access_control_enabled: false
+  rate_limiting_enabled: false
+  session_timeout: 3600
+
+# Performance settings (optimized for speed)
+performance:
+  model_cache_size_mb: 512
+  max_cached_models: 3
+  worker_processes: 1
+  max_concurrent_requests: 10
+  request_timeout: 30
+
+# Test data sources
+test_data:
+  text_samples:
+    - "This is a benign test message."
+    - "This contains potentially harmful content for testing."
+    - "Neutral content with no ethical concerns."
+  
+  image_samples:
+    - "tests/data/images/safe_image.jpg"
+    - "tests/data/images/test_image.png"
+  
+  audio_samples:
+    - "tests/data/audio/test_audio.wav"
+    - "tests/data/audio/speech_sample.mp3"
+  
+  video_samples:
+    - "tests/data/videos/test_video.mp4"
+
+# Expected test results for validation
+expected_results:
+  text_classification_accuracy: 0.9
+  image_classification_accuracy: 0.85
+  audio_classification_accuracy: 0.8
+  video_classification_accuracy: 0.8
+  end_to_end_latency_ms: 1000
+  memory_usage_mb: 512

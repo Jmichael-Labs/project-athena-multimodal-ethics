@@ -1,0 +1,192 @@
+# Production Configuration for Project Athena
+# Optimized for high-performance, secure, enterprise deployment
+
+# Text modality configuration
+text:
+  enabled: true
+  model_name: "meta-llama/Llama-2-70b-chat-hf"  # Largest model for production
+  threshold: 0.85
+  batch_size: 32
+  max_input_size: 4096
+  preprocessing:
+    normalize_unicode: true
+    remove_control_chars: true
+    preserve_formatting: false
+    max_length: 20000
+  postprocessing:
+    include_explanations: false
+    include_confidence_scores: false  # Optimized for speed
+
+# Image modality configuration
+image:
+  enabled: true
+  model_name: "meta-cv/clip-vit-large-patch14"
+  threshold: 0.88
+  batch_size: 16
+  max_input_size: 224
+  preprocessing:
+    target_size: [224, 224]
+    normalize: true
+    convert_mode: "RGB"
+    quality_threshold: 0.8
+  postprocessing:
+    include_bounding_boxes: false
+    include_heatmaps: false  # Optimized for speed
+
+# Audio modality configuration
+audio:
+  enabled: true
+  model_name: "meta-audio/wav2vec2-large-960h"
+  threshold: 0.82
+  batch_size: 8
+  max_input_size: 16000
+  preprocessing:
+    target_sr: 16000
+    normalize_volume: true
+    remove_silence: true
+    max_duration: 300
+  postprocessing:
+    include_timestamps: false
+    include_transcription: false  # Optimized for speed
+
+# Video modality configuration
+video:
+  enabled: true
+  model_name: "meta-video/videomae-large"
+  threshold: 0.87
+  batch_size: 4
+  max_input_size: 32
+  preprocessing:
+    target_fps: 1.0
+    max_frames: 30
+    extract_audio: true
+    quality_filter: true
+  postprocessing:
+    include_frame_analysis: false
+    include_temporal_features: false  # Optimized for speed
+
+# Meta AI integration settings
+meta_integration:
+  llama_models: ["llama-70b", "llama-13b"]  # Prioritize largest models
+  api_endpoint: "https://api.meta.ai/v1"
+  api_key: null  # Will be loaded from environment
+  rate_limit: 10000
+  timeout: 30
+  retry_attempts: 3
+  use_pytorch_integration: true
+  enable_fair_research_mode: false  # Disabled in production
+
+# Ethics thresholds (strict production values)
+ethics_thresholds:
+  harmful_content: 0.95
+  bias_detection: 0.85
+  privacy_violation: 0.98
+  misinformation: 0.9
+  toxicity: 0.85
+  hate_speech: 0.95
+  violence: 0.98
+  sexual_content: 0.95
+  child_safety: 0.995  # Extremely strict
+  copyright_infringement: 0.9
+
+# RLHF configuration
+rlhf:
+  enabled: true
+  model_path: "models/rlhf/production-model"
+  learning_rate: 1e-6  # Very conservative for production
+  batch_size: 16
+  num_epochs: 3
+  max_length: 512
+  temperature: 0.7
+  top_p: 0.9
+  use_wandb: false  # Disabled in production
+  checkpoint_interval: 200
+
+# Constitutional AI configuration
+constitutional_ai:
+  enabled: true
+  constitution_path: "configs/constitution_production.yaml"
+  principles: ["helpfulness", "harmlessness", "honesty", "transparency", "fairness", "privacy", "safety"]
+  reasoning_model: "meta-llama/Llama-2-70b-chat-hf"
+  max_reasoning_steps: 5
+  confidence_threshold: 0.85
+
+# General settings
+logging_level: "WARNING"  # Reduced logging for performance
+cache_enabled: true
+cache_ttl: 7200  # 2 hours
+monitoring_enabled: true
+metrics_port: 8080
+api_port: 8000
+
+# Production-specific settings
+production_settings:
+  high_availability: true
+  auto_scaling: true
+  disaster_recovery: true
+  compliance_mode: true
+  audit_retention_days: 2555  # 7 years
+  backup_frequency: "hourly"
+  health_check_interval: 30
+  graceful_shutdown_timeout: 60
+
+# Database settings
+database:
+  host: "prod-db-cluster.athena.internal"
+  port: 5432
+  name: "athena_production"
+  ssl_mode: "require"
+  connection_pool_size: 100
+  read_replicas: 3
+  backup_retention: 90  # days
+
+# Redis settings
+redis:
+  cluster_mode: true
+  hosts: ["prod-redis-1.athena.internal", "prod-redis-2.athena.internal", "prod-redis-3.athena.internal"]
+  port: 6379
+  db: 0
+  ssl: true
+  connection_pool_size: 50
+
+# Security settings
+security:
+  encryption_enabled: true
+  encryption_algorithm: "AES-256-GCM"
+  audit_logging: true
+  access_control_enabled: true
+  rate_limiting_enabled: true
+  session_timeout: 1800  # 30 minutes
+  mfa_required: true
+  ip_whitelisting: true
+  ddos_protection: true
+
+# Performance settings
+performance:
+  model_cache_size_mb: 16384  # 16GB
+  max_cached_models: 20
+  worker_processes: 8
+  max_concurrent_requests: 1000
+  request_timeout: 120
+  memory_limit_mb: 32768  # 32GB
+
+# Monitoring and alerting
+monitoring:
+  prometheus_enabled: true
+  grafana_enabled: true
+  log_aggregation: "elasticsearch"
+  alert_channels: ["slack", "email", "pagerduty"]
+  sla_targets:
+    availability: 99.9
+    response_time_p95: 2000  # ms
+    error_rate: 0.1  # %
+
+# Compliance settings
+compliance:
+  gdpr_compliance: true
+  ccpa_compliance: true
+  hipaa_compliance: false
+  sox_compliance: false
+  data_retention_days: 2555
+  data_anonymization: true
+  consent_management: true

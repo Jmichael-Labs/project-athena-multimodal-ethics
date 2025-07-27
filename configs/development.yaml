@@ -1,0 +1,122 @@
+# Development Configuration for Project Athena
+# Optimized for local development and testing
+
+# Text modality configuration
+text:
+  enabled: true
+  model_name: "meta-llama/Llama-2-7b-chat-hf"  # Smaller model for dev
+  threshold: 0.7  # Lower threshold for development
+  batch_size: 8   # Smaller batch size for resource constraints
+  max_input_size: 1024
+  preprocessing:
+    normalize_unicode: true
+    remove_control_chars: true
+    preserve_formatting: false
+  postprocessing:
+    include_explanations: true
+
+# Image modality configuration
+image:
+  enabled: true
+  model_name: "meta-cv/clip-vit-base-patch32"  # Smaller model for dev
+  threshold: 0.75
+  batch_size: 4
+  max_input_size: 224
+  preprocessing:
+    target_size: [224, 224]
+    normalize: true
+    convert_mode: "RGB"
+  postprocessing:
+    include_bounding_boxes: true
+
+# Audio modality configuration
+audio:
+  enabled: true
+  model_name: "meta-audio/wav2vec2-base"
+  threshold: 0.7
+  batch_size: 2
+  max_input_size: 16000
+  preprocessing:
+    target_sr: 16000
+    normalize_volume: true
+    remove_silence: true
+  postprocessing:
+    include_timestamps: true
+
+# Video modality configuration
+video:
+  enabled: true
+  model_name: "meta-video/videomae-base"
+  threshold: 0.75
+  batch_size: 1  # Very small for development
+  max_input_size: 8
+  preprocessing:
+    target_fps: 1.0
+    max_frames: 10
+    extract_audio: true
+  postprocessing:
+    include_frame_analysis: true
+
+# Meta AI integration settings
+meta_integration:
+  llama_models: ["llama-7b", "llama-13b"]  # Exclude largest model for dev
+  api_endpoint: "http://localhost:8080/api/v1"  # Local endpoint
+  api_key: null  # Will be loaded from environment
+  rate_limit: 100  # Lower rate limit for dev
+  timeout: 60
+  retry_attempts: 2
+  use_pytorch_integration: true
+  enable_fair_research_mode: true
+
+# Ethics thresholds (relaxed for development testing)
+ethics_thresholds:
+  harmful_content: 0.8
+  bias_detection: 0.7
+  privacy_violation: 0.9
+  misinformation: 0.75
+  toxicity: 0.7
+  hate_speech: 0.8
+  violence: 0.9
+  sexual_content: 0.8
+  child_safety: 0.95  # Keep high even in dev
+  copyright_infringement: 0.75
+
+# RLHF configuration
+rlhf:
+  enabled: false  # Disabled in development
+  model_path: ""
+  learning_rate: 1e-4
+  batch_size: 4
+  num_epochs: 1
+  max_length: 256
+  temperature: 1.0
+  top_p: 0.9
+  use_wandb: false  # Disabled in dev
+  checkpoint_interval: 50
+
+# Constitutional AI configuration
+constitutional_ai:
+  enabled: true
+  constitution_path: "configs/constitution_dev.yaml"
+  principles: ["helpfulness", "harmlessness", "honesty"]  # Reduced set for dev
+  reasoning_model: "meta-llama/Llama-2-7b-chat-hf"
+  max_reasoning_steps: 3
+  confidence_threshold: 0.7
+
+# General settings
+logging_level: "DEBUG"
+cache_enabled: true
+cache_ttl: 1800  # 30 minutes
+monitoring_enabled: true
+metrics_port: 8080
+api_port: 8000
+
+# Development-specific settings
+dev_settings:
+  debug_mode: true
+  hot_reload: true
+  test_data_path: "tests/data"
+  mock_external_apis: true
+  enable_profiling: true
+  log_all_requests: true
+  disable_rate_limiting: true
